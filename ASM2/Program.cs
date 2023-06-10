@@ -53,25 +53,40 @@ class Department
     public void AddStudent(Student student)
     {
         students.Add(student);
+        student.SetDepartment(this); // Set the department for the student
     }
 
     public void RemoveStudent(Student student)
     {
         students.Remove(student);
+        student.RemoveDepartment(); // Remove the department reference from the student
     }
 
     public List<Student> GetStudents()
     {
         return students;
     }
+
 }
 
 abstract class Student
 {
     public int Id { get; set; }
     public string Name { get; set; }
+    private Department department; // Reference to the department
+
+    public void SetDepartment(Department department)
+    {
+        this.department = department;
+    }
+
+    public void RemoveDepartment()
+    {
+        this.department = null;
+    }
 
     public abstract void Display();
+    public abstract void UpdateInformation();
 }
 
 class UndergraduateStudent : Student
@@ -82,16 +97,45 @@ class UndergraduateStudent : Student
     {
         Console.WriteLine("Undergraduate Student: ID = " + Id + ", Name = " + Name + ", Year Level = " + YearLevel);
     }
+
+    public override void UpdateInformation()
+    {
+        Console.Write("Enter updated year level: ");
+        if (!int.TryParse(Console.ReadLine(), out int yearLevel))
+        {
+            Console.WriteLine("Invalid year level. Update failed.");
+            return;
+        }
+
+        YearLevel = yearLevel;
+        Console.WriteLine("Student information updated successfully!");
+    }
 }
 
 class GraduateStudent : Student
 {
     public string ResearchTopic { get; set; }
+    public Project Project { get; set; }
 
     public override void Display()
     {
-        Console.WriteLine("Graduate Student: ID = " + Id + ", Name = " + Name + ", Research Topic = " + ResearchTopic);
+        Console.WriteLine("Graduate Student: ID = " + Id + ", Name = " + Name + ", Research Topic = " + ResearchTopic + ", Project Status = " + Project.Status);
     }
+
+    public override void UpdateInformation()
+    {
+        Console.Write("Enter updated research topic: ");
+        string researchTopic = Console.ReadLine();
+
+        ResearchTopic = researchTopic;
+        Console.WriteLine("Student information updated successfully!");
+    }
+}
+
+class Project
+{
+    public int ProjectId { get; set; }
+    public string Status { get; set; }
 }
 
 class Program
@@ -136,13 +180,16 @@ class Program
                     break;
                 case 7:
                     Console.Clear();
+                    UpdateStudent();
+                    break;
+                case 8:
                     Console.WriteLine("VEBO ( VietNam Education and Beyond Outreach ) School is the most popular " +
                         "school in Viet Nam. We have a long history from the begining of the school. " +
                         "We will bring your kids the best education in Viet Nam for a brighter future of them. TMB " +
                         "<('')\n" +
                         "Vyquaquay, First president of VEBO school.");
                     break;
-                case 8:
+                case 9:
                     Console.WriteLine("Exiting the program...");
                     break;
                 default:
@@ -151,7 +198,7 @@ class Program
             }
 
             Console.WriteLine();
-        } while (choice != 8);
+        } while (choice != 9);
     }
 
     static void DisplayMenu()
@@ -163,8 +210,9 @@ class Program
         Console.WriteLine("4. Remove Department");
         Console.WriteLine("5. Show All Students");
         Console.WriteLine("6. Show All Departments");
-        Console.WriteLine("7. About Us");
-        Console.WriteLine("8. Exit");
+        Console.WriteLine("7. Update Student Information");
+        Console.WriteLine("8. About US");
+        Console.WriteLine("9. Exit");
     }
 
     static int GetUserChoice()
@@ -173,8 +221,8 @@ class Program
 
         while (true)
         {
-            Console.Write("Enter your choice (1-8): ");
-            if (int.TryParse(Console.ReadLine(), out choice) && choice >= 1 && choice <= 8)
+            Console.Write("Enter your choice (1-9): ");
+            if (int.TryParse(Console.ReadLine(), out choice) && choice >= 1 && choice <= 9)
             {
                 return choice;
             }
@@ -226,7 +274,20 @@ class Program
                 Console.Write("Enter research topic: ");
                 string researchTopic = Console.ReadLine();
 
-                student = new GraduateStudent { Id = id, Name = name, ResearchTopic = researchTopic };
+                Project project = new Project();
+                Console.Write("Enter project ID: ");
+                if (!int.TryParse(Console.ReadLine(), out int projectId))
+                {
+                    Console.WriteLine("Invalid project ID. Please try again.");
+                    return;
+                }
+                project.ProjectId = projectId;
+
+                Console.Write("Enter project status: ");
+                string projectStatus = Console.ReadLine();
+                project.Status = projectStatus;
+
+                student = new GraduateStudent { Id = id, Name = name, ResearchTopic = researchTopic, Project = project };
             }
 
             Console.WriteLine("Student added successfully!");
@@ -245,6 +306,120 @@ class Program
         else
         {
             Console.WriteLine("Invalid student type. Please try again.");
+        }
+    }
+
+    static void UpdateStudent()
+    {
+        Department department = SelectDepartment();
+        if (department != null)
+        {
+            Console.Write("Enter student ID to update: ");
+            if (!int.TryParse(Console.ReadLine(), out int studentId))
+            {
+                Console.WriteLine("Invalid student ID. Please try again.");
+                return;
+            }
+
+            Student student = FindStudent(department, studentId);
+            if (student != null)
+            {
+                Console.WriteLine("Select attribute to update:");
+                Console.WriteLine("1. Name");
+                Console.WriteLine("2. Year Level (for Undergraduate Student)");
+                Console.WriteLine("3. Research Topic (for Graduate Student)");
+                Console.WriteLine("4. Project ID (for Graduate Student)");
+                Console.WriteLine("5. Project Status (for Graduate Student)");
+                Console.Write("Enter attribute to update (1-5): ");
+
+                if (int.TryParse(Console.ReadLine(), out int attributeChoice) && attributeChoice >= 1 && attributeChoice <= 5)
+                {
+                    switch (attributeChoice)
+                    {
+                        case 1:
+                            Console.Write("Enter new name: ");
+                            string newName = Console.ReadLine();
+                            student.Name = newName;
+                            Console.WriteLine("Student name updated successfully!");
+                            break;
+                        case 2:
+                            if (student is UndergraduateStudent)
+                            {
+                                Console.Write("Enter new year level: ");
+                                if (!int.TryParse(Console.ReadLine(), out int newYearLevel))
+                                {
+                                    Console.WriteLine("Invalid year level. Please try again.");
+                                    return;
+                                }
+                                ((UndergraduateStudent)student).YearLevel = newYearLevel;
+                                Console.WriteLine("Undergraduate student year level updated successfully!");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid attribute choice for the selected student. Please try again.");
+                            }
+                            break;
+                        case 3:
+                            if (student is GraduateStudent)
+                            {
+                                Console.Write("Enter new research topic: ");
+                                string newResearchTopic = Console.ReadLine();
+                                ((GraduateStudent)student).ResearchTopic = newResearchTopic;
+                                Console.WriteLine("Graduate student research topic updated successfully!");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid attribute choice for the selected student. Please try again.");
+                            }
+                            break;
+                        case 4:
+                            if (student is GraduateStudent)
+                            {
+                                Console.Write("Enter new project ID: ");
+                                if (!int.TryParse(Console.ReadLine(), out int newProjectId))
+                                {
+                                    Console.WriteLine("Invalid project ID. Please try again.");
+                                    return;
+                                }
+                                ((GraduateStudent)student).Project.ProjectId = newProjectId;
+                                Console.WriteLine("Graduate student project ID updated successfully!");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid attribute choice for the selected student. Please try again.");
+                            }
+                            break;
+                        case 5:
+                            if (student is GraduateStudent)
+                            {
+                                Console.Write("Enter new project status: ");
+                                string newProjectStatus = Console.ReadLine();
+                                ((GraduateStudent)student).Project.Status = newProjectStatus;
+                                Console.WriteLine("Graduate student project status updated successfully!");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid attribute choice for the selected student. Please try again.");
+                            }
+                            break;
+                        default:
+                            Console.WriteLine("Invalid attribute choice. Please try again.");
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid attribute choice. Please try again.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Student not found.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Department not found.");
         }
     }
 
@@ -277,25 +452,12 @@ class Program
         }
     }
 
-    static Department SelectDepartment()
-    {
-        Console.Write("Enter department ID: ");
-        if (!int.TryParse(Console.ReadLine(), out int departmentId))
-        {
-            Console.WriteLine("Invalid department ID. Please try again.");
-            return null;
-        }
-
-        Department department = FindDepartment(departmentId);
-        return department;
-    }
-
     static void AddDepartment()
     {
         Console.Write("Enter department ID: ");
         if (!int.TryParse(Console.ReadLine(), out int id))
         {
-            Console.WriteLine("Invalid department ID. Please try again.");
+            Console.WriteLine("Invalid ID. Please try again.");
             return;
         }
 
@@ -310,6 +472,7 @@ class Program
 
         Department department = new Department { Id = id, Name = name };
         university.AddDepartment(department);
+
         Console.WriteLine("Department added successfully!");
     }
 
@@ -336,75 +499,102 @@ class Program
 
     static void ShowAllStudents()
     {
-        Console.WriteLine("All Students:");
         foreach (Department department in university.GetDepartments())
         {
-            Console.WriteLine("Department: " + department.Name);
+            Console.WriteLine("Department: ID = " + department.Id + ", Name = " + department.Name);
+
             foreach (Student student in department.GetStudents())
             {
                 student.Display();
             }
+
             Console.WriteLine();
         }
     }
 
     static void ShowAllDepartments()
     {
-        Console.WriteLine("All Departments:");
-        foreach (Department department in university.GetDepartments())
+        List<Department> departments = university.GetDepartments();
+        if (departments.Count > 0)
         {
-            Console.WriteLine("Department ID: " + department.Id + ", Name: " + department.Name);
-        }
-    }
-
-    static Department FindDepartment(int departmentId)
-    {
-        foreach (Department department in university.GetDepartments())
-        {
-            if (department.Id == departmentId)
+            Console.WriteLine("Departments:");
+            foreach (Department department in departments)
             {
-                return department;
+                Console.WriteLine("ID = " + department.Id + ", Name = " + department.Name);
             }
         }
-        return null;
-    }
-
-    static Student FindStudent(Department department, int studentId)
-    {
-        foreach (Student student in department.GetStudents())
+        else
         {
-            if (student.Id == studentId)
-            {
-                return student;
-            }
+            Console.WriteLine("No departments found.");
         }
-        return null;
     }
 
-    static bool IsDepartmentIdExists(int departmentId)
+    static Department SelectDepartment()
     {
-        foreach (Department department in university.GetDepartments())
+        Console.Write("Enter department ID: ");
+        if (!int.TryParse(Console.ReadLine(), out int departmentId))
         {
-            if (department.Id == departmentId)
-            {
-                return true;
-            }
+            Console.WriteLine("Invalid department ID. Please try again.");
+            return null;
         }
-        return false;
+
+        Department department = FindDepartment(departmentId);
+        return department;
     }
 
-    static bool IsStudentIdExists(int studentId)
+    static bool IsStudentIdExists(int id)
     {
         foreach (Department department in university.GetDepartments())
         {
             foreach (Student student in department.GetStudents())
             {
-                if (student.Id == studentId)
+                if (student.Id == id)
                 {
                     return true;
                 }
             }
         }
+
         return false;
     }
+
+    static Student FindStudent(Department department, int id)
+    {
+        foreach (Student student in department.GetStudents())
+        {
+            if (student.Id == id)
+            {
+                return student;
+            }
+        }
+
+        return null;
+    }
+
+    static bool IsDepartmentIdExists(int id)
+    {
+        foreach (Department department in university.GetDepartments())
+        {
+            if (department.Id == id)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    static Department FindDepartment(int id)
+    {
+        foreach (Department department in university.GetDepartments())
+        {
+            if (department.Id == id)
+            {
+                return department;
+            }
+        }
+
+        return null;
+    }
 }
+
