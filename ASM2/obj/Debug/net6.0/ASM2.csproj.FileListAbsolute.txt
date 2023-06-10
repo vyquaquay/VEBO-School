@@ -1,0 +1,15 @@
+C:\Users\Admin\source\repos\ASM2\ASM2\bin\Debug\net6.0\ASM2.exe
+C:\Users\Admin\source\repos\ASM2\ASM2\bin\Debug\net6.0\ASM2.deps.json
+C:\Users\Admin\source\repos\ASM2\ASM2\bin\Debug\net6.0\ASM2.runtimeconfig.json
+C:\Users\Admin\source\repos\ASM2\ASM2\bin\Debug\net6.0\ASM2.dll
+C:\Users\Admin\source\repos\ASM2\ASM2\bin\Debug\net6.0\ASM2.pdb
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\ASM2.csproj.AssemblyReference.cache
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\ASM2.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\ASM2.AssemblyInfoInputs.cache
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\ASM2.AssemblyInfo.cs
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\ASM2.csproj.CoreCompileInputs.cache
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\ASM2.dll
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\refint\ASM2.dll
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\ASM2.pdb
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\ASM2.genruntimeconfig.cache
+C:\Users\Admin\source\repos\ASM2\ASM2\obj\Debug\net6.0\ref\ASM2.dll
