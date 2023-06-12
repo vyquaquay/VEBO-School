@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
+//collecting data of the Students And Departments
 class University
 {
     private List<Department> departments;
@@ -27,7 +28,7 @@ class University
         return departments;
     }
 }
-
+//Own it name/id and containt the student in it
 class Department
 {
     public int Id { get; set; }
@@ -68,7 +69,7 @@ class Department
     }
 
 }
-
+//just abtract class to make type of student
 abstract class Student
 {
     public int Id { get; set; }
@@ -88,7 +89,7 @@ abstract class Student
     public abstract void Display();
     public abstract void UpdateInformation();
 }
-
+//first type of student
 class UndergraduateStudent : Student
 {
     public int YearLevel { get; set; }
@@ -111,7 +112,7 @@ class UndergraduateStudent : Student
         Console.WriteLine("Student information updated successfully!");
     }
 }
-
+//second type
 class GraduateStudent : Student
 {
     public string ResearchTopic { get; set; }
@@ -131,22 +132,23 @@ class GraduateStudent : Student
         Console.WriteLine("Student information updated successfully!");
     }
 }
-
+//project of the second type student
 class Project
 {
     public int ProjectId { get; set; }
     public string Status { get; set; }
 }
-
+//start of the program
 class Program
 {
+    //Start the list
     static University university;
-
+    //main
     static void Main(string[] args)
     {
-        university = new University();
+         university = new University();
         int choice;
-
+        //get choice and start switch case
         do
         {
             DisplayMenu();
@@ -156,40 +158,20 @@ class Program
             {
                 case 1:
                     Console.Clear();
-                    AddStudent();
+                    ManageStudents();
                     break;
                 case 2:
                     Console.Clear();
-                    RemoveStudent();
+                    ManageDepartments();
                     break;
                 case 3:
-                    Console.Clear();
-                    AddDepartment();
+                    Console.WriteLine("VEBO (VietNam Education and Beyond Outreach) School is the most popular " +
+                        "school in Vietnam. We have a long history from the beginning of the school. " +
+                        "We will bring your kids the best education in Vietnam for a brighter future for them. TMB " +
+                        "<('')\n" +
+                        "Vyquaquay, First President of VEBO School.");
                     break;
                 case 4:
-                    Console.Clear();
-                    RemoveDepartment();
-                    break;
-                case 5:
-                    Console.Clear();
-                    ShowAllStudents();
-                    break;
-                case 6:
-                    Console.Clear();
-                    ShowAllDepartments();
-                    break;
-                case 7:
-                    Console.Clear();
-                    UpdateStudent();
-                    break;
-                case 8:
-                    Console.WriteLine("VEBO ( VietNam Education and Beyond Outreach ) School is the most popular " +
-                        "school in Viet Nam. We have a long history from the begining of the school. " +
-                        "We will bring your kids the best education in Viet Nam for a brighter future of them. TMB " +
-                        "<('')\n" +
-                        "Vyquaquay, First president of VEBO school.");
-                    break;
-                case 9:
                     Console.WriteLine("Exiting the program...");
                     break;
                 default:
@@ -198,31 +180,111 @@ class Program
             }
 
             Console.WriteLine();
-        } while (choice != 9);
+        } while (choice != 4);
     }
-
+    //the menu
     static void DisplayMenu()
     {
         Console.WriteLine("Menu:");
-        Console.WriteLine("1. Add Student");
-        Console.WriteLine("2. Remove Student");
-        Console.WriteLine("3. Add Department");
-        Console.WriteLine("4. Remove Department");
-        Console.WriteLine("5. Show All Students");
-        Console.WriteLine("6. Show All Departments");
-        Console.WriteLine("7. Update Student Information");
-        Console.WriteLine("8. About US");
-        Console.WriteLine("9. Exit");
+        Console.WriteLine("1. Manage Students");
+        Console.WriteLine("2. Manage Departments");
+        Console.WriteLine("3. About US");
+        Console.WriteLine("4. Exit");
     }
+    //mane student option
+    static void ManageStudents()
+    {
+        int choiceS;
 
+        do
+        {
+            Console.WriteLine("Manage Students:");
+            Console.WriteLine("1. Add Student");
+            Console.WriteLine("2. Update Student Information");
+            Console.WriteLine("3. Remove Student");
+            Console.WriteLine("4. Show All Students");
+            Console.WriteLine("5. Go Back");
+
+            choiceS = GetUserChoiceS();
+
+            switch (choiceS)
+            {
+                case 1:
+                    Console.Clear();
+                    AddStudent();
+                    break;
+                case 2:
+                    Console.Clear();
+                    UpdateStudent();
+                    break;
+                case 3:
+                    Console.Clear();
+                    RemoveStudent();
+                    break;
+                case 4:
+                    Console.Clear();
+                    ShowAllStudents();
+                    break;
+                case 5:
+                    Console.WriteLine("Returning to the main menu...");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+
+            Console.WriteLine();
+        } while (choiceS != 5);
+    }
+    //manage department option
+    static void ManageDepartments()
+    {
+        int choiceD;
+
+        do
+        {
+            Console.WriteLine("Manage Departments:");
+            Console.WriteLine("1. Add Department");
+            Console.WriteLine("2. Remove Department");
+            Console.WriteLine("3. Show All Departments");
+            Console.WriteLine("4. Go Back");
+
+            choiceD = GetUserChoiceD();
+
+            switch (choiceD)
+            {
+                case 1:
+                    Console.Clear();
+                    AddDepartment();
+                    break;
+                case 2:
+                    Console.Clear();
+                    RemoveDepartment();
+                    break;
+                case 3:
+                    Console.Clear();
+                    ShowAllDepartments();
+                    break;
+                case 4:
+                    Console.WriteLine("Returning to the main menu...");
+                    break;
+                default:
+                    Console.WriteLine("Invalid choice. Please try again.");
+                    break;
+            }
+
+            Console.WriteLine();
+        } while (choiceD != 4);
+    }
+    //first user choice
     static int GetUserChoice()
     {
         int choice;
 
         while (true)
         {
-            Console.Write("Enter your choice (1-9): ");
-            if (int.TryParse(Console.ReadLine(), out choice) && choice >= 1 && choice <= 9)
+            Console.Write("Enter your choice (1-4): ");
+            if (int.TryParse(Console.ReadLine(), out choice) && choice >= 1 && choice <= 4)
             {
                 return choice;
             }
@@ -232,7 +294,43 @@ class Program
             }
         }
     }
+    //If user choose manage student
+    static int GetUserChoiceS()
+    {
+        int choiceS;
 
+        while (true)
+        {
+            Console.Write("Enter your choice (1-5): ");
+            if (int.TryParse(Console.ReadLine(), out choiceS) && choiceS >= 1 && choiceS <= 5)
+            {
+                return choiceS;
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Please try again.");
+            }
+        }
+    }
+    //If user choose manage department
+    static int GetUserChoiceD()
+    {
+        int choiceD;
+
+        while (true)
+        {
+            Console.Write("Enter your choice (1-4): ");
+            if (int.TryParse(Console.ReadLine(), out choiceD) && choiceD >= 1 && choiceD <= 4)
+            {
+                return choiceD;
+            }
+            else
+            {
+                Console.WriteLine("Invalid choice. Please try again.");
+            }
+        }
+    }
+    // add student information
     static void AddStudent()
     {
         Console.Write("Enter student ID: ");
@@ -528,7 +626,7 @@ class Program
             Console.WriteLine("No departments found.");
         }
     }
-
+    //for some reaso if user input the ID that not have
     static Department SelectDepartment()
     {
         Console.Write("Enter department ID: ");
@@ -541,7 +639,7 @@ class Program
         Department department = FindDepartment(departmentId);
         return department;
     }
-
+    // check for duplicate ID student
     static bool IsStudentIdExists(int id)
     {
         foreach (Department department in university.GetDepartments())
@@ -570,7 +668,7 @@ class Program
 
         return null;
     }
-
+    //check duplicate department ID
     static bool IsDepartmentIdExists(int id)
     {
         foreach (Department department in university.GetDepartments())
