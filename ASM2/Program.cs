@@ -626,7 +626,7 @@ class Program
             Console.WriteLine("No departments found.");
         }
     }
-    //for some reaso if user input the ID that not have
+    //for some reason if user input the ID that not have
     static Department SelectDepartment()
     {
         Console.Write("Enter department ID: ");
